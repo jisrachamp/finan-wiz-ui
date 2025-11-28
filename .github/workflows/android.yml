@@ -1,7 +1,7 @@
 name: Android Debug Build (Capacitor)
 
 on:
-  workflow_dispatch:  # para ejecutarlo manualmente desde GitHub
+  workflow_dispatch: # Se ejecuta manualmente desde la pestaña Actions
 
 jobs:
   build-android:
@@ -27,6 +27,10 @@ jobs:
       - name: Sync Capacitor Android
         run: |
           npx cap sync android
+
+      - name: Make gradlew executable
+        run: |
+          chmod +x android/gradlew
 
       - name: Setup Java
         uses: actions/setup-java@v4
