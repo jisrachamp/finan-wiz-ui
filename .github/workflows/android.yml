@@ -1,11 +1,17 @@
 name: Android Debug Build (Capacitor)
 
 on:
-  workflow_dispatch: # Se ejecuta manualmente desde la pestaña Actions
+  workflow_dispatch:
 
 jobs:
   build-android:
     runs-on: ubuntu-latest
+
+    # Limpia por si el runner trae JAVA_TOOL_OPTIONS o cosas raras
+    env:
+      JAVA_TOOL_OPTIONS: ""
+      _JAVA_OPTIONS: ""
+      GRADLE_OPTS: ""
 
     steps:
       - name: Checkout repo
@@ -41,7 +47,11 @@ jobs:
       - name: Build debug APK
         run: |
           cd android
-          ./gradlew assembleDebug
+          echo "JAVA_HOME es: $JAVA_HOME"
+          ./gradlew \
+            -Djavax.net.ssl.trustStore=$JAVA_HOME/lib/security/cacerts \
+            -Djavax.net.ssl.trustStoreType=pkcs12 \
+            assembleDebug
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
